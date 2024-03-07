@@ -16,7 +16,7 @@ def run(gpus, seq):
     log_file = seq.split('/')[-1]
     log_file = f"logs/{log_file}.log"
     os.makedirs("logs", exist_ok=True)
-    cmd = f"python mono/tools/test_scale_cano.py mono/configs/HourglassDecoder/test_kitti_convlarge_hourglass_0.3_150.py' \
+    cmd = f"python mono/tools/test_scale_cano.py 'mono/configs/HourglassDecoder/test_kitti_convlarge_hourglass_0.3_150.py' \
     --load-from ./weight/convlarge_hourglass_0.3_150_step750k_v1.1.pth \
     --test_data_path {seq} \
     --show-dir /root/code/Metric3D/results/EMDB/ \
