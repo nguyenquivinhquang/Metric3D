@@ -287,15 +287,22 @@ def do_scalecano_test_with_custom_data(
             std = torch.tensor([58.395, 57.12, 57.375]).float()[:, None, None].to(rgb_torch.device)
             rgb_torch = torch.div((rgb_torch - mean), std)
 
-            save_val_imgs(
-                i,
-                pred_depth,
-                gt_depth if gt_depth is not None else torch.ones_like(pred_depth, device=pred_depth.device),
-                rgb_torch,
+            # save_val_imgs(
+            #     i,
+            #     pred_depth,
+            #     gt_depth if gt_depth is not None else torch.ones_like(pred_depth, device=pred_depth.device),
+            #     rgb_torch,
+            #     osp.join(an['folder'], an['filename']),
+            #     save_imgs_dir,
+            # )
+            save_raw_imgs(
+                pred_depth.detach().cpu().numpy(),
+                rgb_origin,
                 osp.join(an['folder'], an['filename']),
                 save_imgs_dir,
+                # scale=10000.0,
+                target=gt_depth.cpu().numpy() if gt_depth is not None else None,
             )
-
             # pcd
             pred_depth = pred_depth.detach().cpu().numpy()
             pcd = reconstruct_pcd(pred_depth, intrinsic[0], intrinsic[1], intrinsic[2], intrinsic[3])
