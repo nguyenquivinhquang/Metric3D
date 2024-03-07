@@ -22,19 +22,17 @@ def run(gpus, seq):
     --show-dir /root/code/Metric3D/results/EMDB/ \
     --launcher None"
     # cmd = f"CUDA_VISIBLE_DEVICES={gpu} python demo.py --data {video_name} --disable_vis  --output_dir {save_dir} --intrinsic_params {intrinsic[0]} {intrinsic[1]} {intrinsic[2]} {intrinsic[3]}"
-    print(cmd)
+    print("Process", seq)
     cmd = f"{cmd} > {log_file} 2>&1"
-    # print(cmd)
-    exit(0)
-    
+        
     subprocess.call(cmd, shell=True)
-
+    print("Done", seq)
     return
 if __name__ == "__main__":
     # seqs_P = ['P4', 'P5', 'P6']
     parser = argparse.ArgumentParser()
     parser.add_argument("--gpus", nargs="*", default=[0])
-    parser.add_argument("--num_threads",  type=int, default=4)
+    parser.add_argument("--num_threads",  type=int, default=10)
 
     args = parser.parse_args()
     seqs = []
