@@ -239,7 +239,7 @@ def do_scalecano_test_with_custom_data(
     dam = MetricAverageMeter(['abs_rel', 'rmse', 'silog', 'delta1', 'delta2', 'delta3'])
     dam_median = MetricAverageMeter(['abs_rel', 'rmse', 'silog', 'delta1', 'delta2', 'delta3'])
     dam_global = MetricAverageMeter(['abs_rel', 'rmse', 'silog', 'delta1', 'delta2', 'delta3'])
-    
+    output_dict = {}
     for i, an in tqdm(enumerate(test_data)):
         #rgb_origin = cv2.imread(an['rgb'])[:, :, ::-1].copy()
         rgb_origin = cv2.imread(an['rgb'])
@@ -266,7 +266,11 @@ def do_scalecano_test_with_custom_data(
             normalize_scale = normalize_scale,
             ori_shape=[rgb_origin.shape[0], rgb_origin.shape[1]],
         )
-
+        output_dict[an['filename']] = {
+            'pred_depth': pred_depth.detach().cpu().numpy(),
+            'pred_depth_scale': pred_depth_scale.detach().cpu().numpy() if pred_depth_scale is not None else None,
+            'scale': scale,
+        }
         if gt_depth_flag:
 
             pred_depth = torch.nn.functional.interpolate(pred_depth[None, None, :, :], (gt_depth.shape[0], gt_depth.shape[1]), mode='bilinear').squeeze() # to original size
@@ -320,7 +324,7 @@ def do_scalecano_test_with_custom_data(
                         pcd = reconstruct_pcd(pred_depth, f_scale * r, f_scale * (2 - r), intrinsic[2], intrinsic[3])
                         fstr = '_fx_' + str(int(f_scale * r)) + '_fy_' + str(int(f_scale * (2-r)))
                         save_point_cloud(pcd.reshape((-1, 3)), rgb_origin.reshape(-1, 3), osp.join(save_pcd_dir, an['folder'], an['filename'][:-4]+fstr+'.ply'))
-    
+    torch.save(output_dict, osp.join(save_imgs_dir, 'output_dict.pth'))
     if gt_depth_flag:
         eval_error = dam.get_metrics()
         print('w/o match :', eval_error)
