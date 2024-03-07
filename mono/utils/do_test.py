@@ -324,7 +324,8 @@ def do_scalecano_test_with_custom_data(
                         pcd = reconstruct_pcd(pred_depth, f_scale * r, f_scale * (2 - r), intrinsic[2], intrinsic[3])
                         fstr = '_fx_' + str(int(f_scale * r)) + '_fy_' + str(int(f_scale * (2-r)))
                         save_point_cloud(pcd.reshape((-1, 3)), rgb_origin.reshape(-1, 3), osp.join(save_pcd_dir, an['folder'], an['filename'][:-4]+fstr+'.ply'))
-    torch.save(output_dict, osp.join(save_imgs_dir, 'output_dict.pth'))
+    output_dir = osp.join(show_dir, 'output' , an['folder'])
+    torch.save(output_dict, osp.join(output_dir, 'output_dict.pth'))
     if gt_depth_flag:
         eval_error = dam.get_metrics()
         print('w/o match :', eval_error)
