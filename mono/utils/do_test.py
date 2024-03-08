@@ -309,22 +309,23 @@ def do_scalecano_test_with_custom_data(
             )
             # pcd
             pred_depth = pred_depth.detach().cpu().numpy()
-            pcd = reconstruct_pcd(pred_depth, intrinsic[0], intrinsic[1], intrinsic[2], intrinsic[3])
+            # pcd = reconstruct_pcd(pred_depth, intrinsic[0], intrinsic[1], intrinsic[2], intrinsic[3])
             os.makedirs(osp.join(save_pcd_dir, an['folder']), exist_ok=True)
             
-            if an['intrinsic'] != None:
-                save_point_cloud(pcd.reshape((-1, 3)), rgb_origin.reshape(-1, 3), osp.join(save_pcd_dir, an['folder'], an['filename'][:-4]+'.ply'))
-            else:
-                # for r in [0.9, 1.0, 1.1]:
-                #     for f in [600, 800, 1000, 1250, 1500]:
-                for r in [1.0]:
-                    for f in [1000]:
-                        #f_scale = f
-                        f_scale = f * (rgb_origin.shape[0] + rgb_origin.shape[1]) / (cfg.data_basic.canonical_space['img_size'][0] + cfg.data_basic.canonical_space['img_size'][1])
-                        pcd = reconstruct_pcd(pred_depth, f_scale * r, f_scale * (2 - r), intrinsic[2], intrinsic[3])
-                        fstr = '_fx_' + str(int(f_scale * r)) + '_fy_' + str(int(f_scale * (2-r)))
-                        save_point_cloud(pcd.reshape((-1, 3)), rgb_origin.reshape(-1, 3), osp.join(save_pcd_dir, an['folder'], an['filename'][:-4]+fstr+'.ply'))
+            # if an['intrinsic'] != None:
+            #     save_point_cloud(pcd.reshape((-1, 3)), rgb_origin.reshape(-1, 3), osp.join(save_pcd_dir, an['folder'], an['filename'][:-4]+'.ply'))
+            # else:
+            #     # for r in [0.9, 1.0, 1.1]:
+            #     #     for f in [600, 800, 1000, 1250, 1500]:
+            #     for r in [1.0]:
+            #         for f in [1000]:
+            #             #f_scale = f
+            #             f_scale = f * (rgb_origin.shape[0] + rgb_origin.shape[1]) / (cfg.data_basic.canonical_space['img_size'][0] + cfg.data_basic.canonical_space['img_size'][1])
+            #             pcd = reconstruct_pcd(pred_depth, f_scale * r, f_scale * (2 - r), intrinsic[2], intrinsic[3])
+            #             fstr = '_fx_' + str(int(f_scale * r)) + '_fy_' + str(int(f_scale * (2-r)))
+            #             save_point_cloud(pcd.reshape((-1, 3)), rgb_origin.reshape(-1, 3), osp.join(save_pcd_dir, an['folder'], an['filename'][:-4]+fstr+'.ply'))
     output_dir = osp.join(show_dir, 'output' , an['folder'])
+    os.makedirs(output_dir, exist_ok=True)
     torch.save(output_dict, osp.join(output_dir, 'output_dict.pth'))
     if gt_depth_flag:
         eval_error = dam.get_metrics()
