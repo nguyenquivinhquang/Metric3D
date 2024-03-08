@@ -13,7 +13,7 @@ def load_from_annos(anno_path):
         depth = anno['depth'] if 'depth' in anno else None
         depth_scale = anno['depth_scale'] if 'depth_scale' in anno else 1.0
         intrinsic = anno['cam_in'] if 'cam_in' in anno else None
-
+        # breakpoint()
         data_i = {
             'rgb': rgb,
             'depth': depth,
@@ -27,5 +27,6 @@ def load_from_annos(anno_path):
 
 def load_data(path: str):
     rgbs = glob.glob(path + '/*.jpg') + glob.glob(path + '/*.png')
+    breakpoint()
     data = [{'rgb':i, 'depth':None, 'intrinsic': None, 'filename':os.path.basename(i), 'folder': i.split('/')[-3]} for i in rgbs]
     return data
