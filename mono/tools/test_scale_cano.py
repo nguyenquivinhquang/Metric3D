@@ -97,6 +97,7 @@ def main(args):
         test_data = load_from_annos(test_data_path)
     else:
         test_data = load_data(args.test_data_path)
+    # print(test_data)
     
     if not cfg.distributed:
         main_worker(0, cfg, args.launcher, test_data)

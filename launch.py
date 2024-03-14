@@ -5,13 +5,13 @@ import multiprocessing as mp
 from concurrent import futures
 import shutil
 import argparse
-DATASET_DIR = '/root/code/Metric3D/data/EMDB/'
+DATASET_DIR = '/root/code/Metric3D/data/EMDB_mask/'
 # OUTPUT_DIR = "/root/code/multi-hmr/results/"
 
 def run(gpus, seq):
-    cur_proc = mp.current_process()
-    # print(cur_proc)
-    worker_id = cur_proc._identity[0] - 1  # 1-indexed processes
+    # cur_proc = mp.current_process()
+    # # print(cur_proc)
+    # worker_id = cur_proc._identity[0] - 1  # 1-indexed processes
 
     log_file = seq.split('/')[-1]
     log_file = f"logs/{log_file}.log"
@@ -19,7 +19,7 @@ def run(gpus, seq):
     cmd = f"python mono/tools/test_scale_cano.py 'mono/configs/HourglassDecoder/test_kitti_convlarge_hourglass_0.3_150.py' \
     --load-from ./weight/convlarge_hourglass_0.3_150_step750k_v1.1.pth \
     --test_data_path {seq} \
-    --show-dir /root/code/Metric3D/results/EMDB/ \
+    --show-dir /root/code/Metric3D/results/EMDB_mask/ \
     --launcher None"
     # cmd = f"CUDA_VISIBLE_DEVICES={gpu} python demo.py --data {video_name} --disable_vis  --output_dir {save_dir} --intrinsic_params {intrinsic[0]} {intrinsic[1]} {intrinsic[2]} {intrinsic[3]}"
     print("Process", seq)
